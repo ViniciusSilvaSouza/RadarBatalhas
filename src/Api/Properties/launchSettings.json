@@ -1,0 +1,25 @@
+﻿{
+  "$schema": "https://json.schemastore.org/launchsettings.json",
+  "profiles": {
+    "http": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "applicationUrl": "http://localhost:55643",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "DB_HOST": "localhost",
+        "DB_PORT": "3307",
+        "DB_NAME": "radar",
+        "DB_USER": "radar",
+        "DB_PASSWORD": "radar123",
+        "REDIS_HOST": "localhost:6379",
+        "KEYCLOAK_AUTH_URL": "http://localhost:8080",
+        "KEYCLOAK_REALM": "radar",
+        "KEYCLOAK_CLIENT_ID": "radar-api",
+        "KEYCLOAK_CLIENT_SECRET": "dev-secret-change-me"
+      }
+    }
+  }
+}

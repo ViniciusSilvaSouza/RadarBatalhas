@@ -1,0 +1,42 @@
+# .NET / Visual Studio / Rider
+**/bin/
+**/obj/
+**/.vs/
+**/.idea/
+**/.vscode/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build and logs
+**/out/
+**/artifacts/
+**/logs/
+
+# Tests and coverage
+**/TestResults/
+**/coverage/
+*.trx
+
+# Packages
+**/packages/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Node
+**/node_modules/
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+**/secrets.json
+**/appsettings.Local*.json
+**/appsettings.*.Secrets.json
+
+# Docker
+**/Dockerfile.*
+**/docker-compose.*.override.yml

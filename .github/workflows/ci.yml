@@ -1,0 +1,29 @@
+name: ci
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+      - name: Restore
+        run: dotnet restore radar.sln
+      - name: Build
+        run: dotnet build -c Release --no-restore radar.sln
+      - name: Test
+        run: dotnet test -c Release --no-build --collect:"XPlat Code Coverage" radar.sln
+      - name: Upload coverage
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: '**/TestResults/**/*.xml'
+      - name: SAST placeholder
+        run: echo "SAST step placeholder"

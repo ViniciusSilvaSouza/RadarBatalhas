@@ -1,0 +1,211 @@
+openapi: 3.0.3
+info:
+  title: Radar das Batalhas API
+  version: 0.1.0
+servers:
+  - url: http://localhost:5000/api/v1
+paths:
+  /public/ranking:
+    get:
+      summary: Lista o ranking por número de vitórias
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ItemRankingDto'
+                  correlationId:
+                    type: string
+  /public/eventos/proximos:
+    get:
+      summary: Lista eventos com inscrições abertas
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/EventoDto'
+                  correlationId:
+                    type: string
+  /admin/eventos:
+    post:
+      summary: Cria um novo evento
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/EventoDto'
+                  correlationId:
+                    type: string
+  /admin/confrontos/{id}/vencedor:
+    post:
+      summary: Registra vencedor de um confronto
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegistrarVencedorConfrontoRequest'
+      responses:
+        '200':
+          description: OK
+  /admin/confrontos/{id}/wo:
+    post:
+      summary: Registra W.O. em um confronto
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: OK
+  /admin/eventos/{id}/inscricoes:
+    get:
+      summary: Lista inscrições de um evento
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: OK
+  /admin/noticias/rascunhos:
+    get:
+      summary: Lista notícias rascunho
+      responses:
+        '200':
+          description: OK
+  /admin/eventos/{id}/fixos/vagas:
+    post:
+      summary: Define número de vagas fixas
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: OK
+  /admin/eventos/{id}/fixos/mcs:
+    post:
+      summary: Define/adiciona MCs fixos da edição
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: OK
+  /admin/eventos/{id}/pre-selecao/criar:
+    post:
+      summary: Gera lista de pré-selecionados
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: OK
+  /admin/eventos/{eventoId}/inscricoes/{usuarioMcId}/remover-por-wo:
+    post:
+      summary: Remove MC inscrito por W.O. recente
+      parameters:
+        - in: path
+          name: eventoId
+          required: true
+          schema: { type: string, format: uuid }
+        - in: path
+          name: usuarioMcId
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: OK
+  /mc/eventos/{id}/inscrever:
+    post:
+      summary: MC se inscreve no evento
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: OK
+  /mc/eventos/abertos:
+    get:
+      summary: MC lista eventos com inscrições abertas
+      responses:
+        '200':
+          description: OK
+  /mc/eu/historico-wo:
+    get:
+      summary: MC consulta histórico de W.O. recebidos
+      responses:
+        '200':
+          description: OK
+  /auth/me:
+    get:
+      summary: Retorna claims básicas
+      responses:
+        '200':
+          description: OK
+components:
+  schemas:
+    EventoDto:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        nome: { type: string }
+        data: { type: string, format: date-time }
+        nomeLocal: { type: string }
+        idStatus: { type: integer }
+    ItemRankingDto:
+      type: object
+      properties:
+        usuarioMcId: { type: string, format: uuid }
+        vitorias: { type: integer }
+    RegistrarVencedorConfrontoRequest:
+      type: object
+      properties:
+        confrontoId: { type: string, format: uuid }
+        vencedorId: { type: string, format: uuid }
+    CriarEventoRequest:
+      type: object
+      properties:
+        nome: { type: string }
+        data: { type: string, format: date-time }
+        nomeLocal: { type: string }
+    ProblemDetails:
+      type: object
+      properties:
+        status: { type: integer }
+        code: { type: string }
+        message: { type: string }
+        correlationId: { type: string }
