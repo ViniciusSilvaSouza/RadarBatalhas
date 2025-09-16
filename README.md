@@ -1,4 +1,4 @@
-# Radar das Batalhas - Backend (Template)
+# Radar das Batalhas - Backend
 
 Stack: .NET 9 Web API, EF Core MySQL, Redis, Serilog, AutoMapper, Keycloak, xUnit.
 
@@ -15,16 +15,16 @@ Stack: .NET 9 Web API, EF Core MySQL, Redis, Serilog, AutoMapper, Keycloak, xUni
 4. Parar: docker compose down
 
 ## Migrations
-- Em dev, aplique via: docker compose exec api dotnet ef database update (placeholder, migrations ser„o adicionadas).
+- Em dev, aplique via: docker compose exec api dotnet ef database update (placeholder, migrations ser√£o adicionadas).
 
 ## Auth (Keycloak)
 - Suba o Keycloak (docker-compose)
-- Crie realm `radar`, client `radar-api` (confidential), roles/papÈis e permissıes (ver RBAC)
+- Crie realm `radar`, client `radar-api` (confidential), roles/pap√©is e permiss√µes (ver RBAC)
 - Defina `KEYCLOAK_CLIENT_SECRET` no `.env`
 
 ## RBAC (seed inicial)
-- PapÈis: ADMINISTRADOR, ORGANIZADOR, MC, VISUALIZADOR
-- Permissıes: ver seÁ„o do prompt (eventos.*, noticias.*, ranking.ler, etc.)
+- Pap√©is: ADMINISTRADOR, ORGANIZADOR, MC, VISUALIZADOR
+- Permiss√µes: ver se√ß√£o do prompt (eventos.*, noticias.*, ranking.ler, etc.)
 
 ## API Base
 - BasePath: /api/v1
@@ -39,7 +39,7 @@ Stack: .NET 9 Web API, EF Core MySQL, Redis, Serilog, AutoMapper, Keycloak, xUni
 
 ## Testes
 - Unit: AAA, Moq
-- Integration: usa autenticaÁ„o fake no ambiente `Test`
+- Integration: usa autentica√ß√£o fake no ambiente `Test`
 
 ## Observabilidade
 - Serilog (console JSON)
@@ -48,6 +48,6 @@ Stack: .NET 9 Web API, EF Core MySQL, Redis, Serilog, AutoMapper, Keycloak, xUni
 ## Pastas por feature
 - Application/Eventos/UseCases, Api/Controllers/Admin etc.
 
-## PrÛximos passos
-- Completar use cases e repositÛrios
+## Pr√≥ximos passos
+- Completar use cases e reposit√≥rios
 - Migrations + seed RBAC e Status
