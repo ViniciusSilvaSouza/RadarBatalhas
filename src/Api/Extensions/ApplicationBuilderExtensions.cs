@@ -20,6 +20,9 @@ public static class ApplicationBuilderExtensions
         app.UseSwagger();
         app.UseSwaggerUI();
 
+        // Static files for uploads (wwwroot/uploads)
+        app.UseStaticFiles();
+
         app.UseAuthentication();
         app.UseAuthorization();
 

@@ -3,6 +3,7 @@ using Domain.Enums;
 using Domain.Repositorios.Eventos;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace Infrastructure.Repositories;
 

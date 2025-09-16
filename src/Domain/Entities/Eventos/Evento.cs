@@ -17,4 +17,9 @@ public class Evento
     public StatusEvento IdStatus { get; set; } = StatusEvento.RASCUNHO;
     public DateTime CriadoEm { get; set; } = DateTime.UtcNow;
     public Guid OrganizadorId { get; set; }
+
+    // Exibição no frontend
+    public string? ImagemUrl { get; set; }
+    public double? Latitude { get; set; }
+    public double? Longitude { get; set; }
 }

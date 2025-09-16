@@ -10,6 +10,10 @@ using StackExchange.Redis;
 using Api.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
+using Application.Contracts;
+using Infrastructure.Services;
+using Amazon.S3;
+using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 
 namespace Api.Extensions.DI;
 
@@ -89,6 +93,18 @@ public static class DependencyInjection
             options.AddPolicy("admin.somente", p => p.Requirements.Add(new PermissionRequirement("noticias.publicar")));
         });
         services.AddScoped<IAuthorizationHandler, PermissionHandler>();
+
+        // Storage: local (dev/test) ou S3 (prod)
+        var storageProvider = EnvOrDefault("FILE_STORAGE_PROVIDER", env.IsProduction() ? "S3" : "LOCAL");
+        if (string.Equals(storageProvider, "S3", StringComparison.OrdinalIgnoreCase))
+        {
+            services.AddSingleton<IAmazonS3>(_ => new AmazonS3Client());
+            services.AddScoped<IFileStorageService, S3FileStorageService>();
+        }
+        else
+        {
+            services.AddScoped<IFileStorageService, LocalFileStorageService>();
+        }
 
         // UoW + App dependencies (repositories, use cases)
         services.AddScoped<IUnitOfWork, UnitOfWork>();

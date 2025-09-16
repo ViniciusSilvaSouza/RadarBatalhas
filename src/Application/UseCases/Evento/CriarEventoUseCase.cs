@@ -20,7 +20,10 @@ public class CriarEventoUseCase(IEventoRepositorio repo, IUnitOfWork uow, IMappe
             Data = request.Data,
             NomeLocal = request.NomeLocal,
             IdStatus = StatusEvento.RASCUNHO,
-            OrganizadorId = organizadorId
+            OrganizadorId = organizadorId,
+            ImagemUrl = request.ImagemUrl,
+            Latitude = request.Latitude,
+            Longitude = request.Longitude
         };
         await _repo.AdicionarAsync(e, ct);
         await _uow.SaveChangesAsync(ct);
