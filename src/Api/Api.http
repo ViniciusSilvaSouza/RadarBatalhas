@@ -1,6 +1,86 @@
-@Api_HostAddress = http://localhost:5216
+﻿@Api_HostAddress = http://localhost:55643
 
-GET {{Api_HostAddress}}/weatherforecast/
-Accept: application/json
 
 ###
+# Variáveis
+@api = http://localhost:8081
+@kc = http://localhost:8080
+@realm = radar
+@client_id = radar-api
+@client_secret = COLOQUE_AQUI
+@username = organizador
+@password = COLOQUE_AQUI
+@token = COLE_O_ACCESS_TOKEN_AQUI
+@eventoId = 00000000-0000-0000-0000-000000000000
+@novoUsuarioId = 11111111-2222-3333-4444-555555555555
+
+### 1) Auth - Obter token (Keycloak)
+POST {{kc}}/realms/{{realm}}/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=password&client_id={{client_id}}&client_secret={{client_secret}}&username={{username}}&password={{password}}
+
+### 2) Auth - Identidade atual
+GET {{api}}/api/v1/auth/me
+Authorization: Bearer {{token}}
+Accept: application/json
+
+### 3) Usuários - Self-onboarding
+POST {{api}}/api/v1/usuarios/self
+Authorization: Bearer {{token}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "nome": "Usuário Visu",
+  "email": "visu@example.com"
+}
+
+### 4) Admin - Listar permissões
+GET {{api}}/api/v1/admin/permissoes
+Authorization: Bearer {{token}}
+Accept: application/json
+
+### 5) Admin - Criar/atribuir usuário a um papel (único papel por usuário)
+POST {{api}}/api/v1/admin/usuarios
+Authorization: Bearer {{token}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "id": "{{novoUsuarioId}}",
+  "nome": "Usuário Organizador",
+  "email": "org@example.com",
+  "papel": "ORGANIZADOR"
+}
+
+### 6) Eventos públicos - Listar próximos
+GET {{api}}/api/v1/public/eventos
+Accept: application/json
+
+### 7) Eventos públicos - Obter por ID
+GET {{api}}/api/v1/public/eventos/{{eventoId}}
+Accept: application/json
+
+### 8) Admin - Criar evento
+POST {{api}}/api/v1/admin/eventos
+Authorization: Bearer {{token}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "nome": "Copa Radar",
+  "data": "2025-10-10T18:00:00Z",
+  "nomeLocal": "Praça Central"
+}
+
+### 9) Ranking público
+GET {{api}}/api/v1/public/ranking
+Accept: application/json
+
+### 10) Infra - Health
+GET {{api}}/health
+Accept: application/json
+
+### 11) Infra - Swagger
+GET {{api}}/swagger/index.html

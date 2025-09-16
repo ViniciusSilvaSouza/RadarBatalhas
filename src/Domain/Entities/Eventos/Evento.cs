@@ -16,4 +16,5 @@ public class Evento
     public int? QuantidadeVagasSorteio { get; set; }
     public StatusEvento IdStatus { get; set; } = StatusEvento.RASCUNHO;
     public DateTime CriadoEm { get; set; } = DateTime.UtcNow;
+    public Guid OrganizadorId { get; set; }
 }

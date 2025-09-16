@@ -12,14 +12,15 @@ public class CriarEventoUseCase(IEventoRepositorio repo, IUnitOfWork uow, IMappe
     private readonly IUnitOfWork _uow = uow;
     private readonly IMapper _mapper = mapper;
 
-    public async Task<EventoDto> ExecuteAsync(CriarEventoRequest request, CancellationToken ct = default)
+    public async Task<EventoDto> ExecuteAsync(CriarEventoRequest request, Guid organizadorId, CancellationToken ct = default)
     {
         var e = new Domain.Entities.Eventos.Evento
         {
             Nome = request.Nome,
             Data = request.Data,
             NomeLocal = request.NomeLocal,
-            IdStatus = StatusEvento.RASCUNHO
+            IdStatus = StatusEvento.RASCUNHO,
+            OrganizadorId = organizadorId
         };
         await _repo.AdicionarAsync(e, ct);
         await _uow.SaveChangesAsync(ct);

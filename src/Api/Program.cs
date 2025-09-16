@@ -1,4 +1,4 @@
-using Api.DI;
+using Api.Extensions.DI;
 using Api.Extensions;
 using Serilog;
 using Microsoft.EntityFrameworkCore;

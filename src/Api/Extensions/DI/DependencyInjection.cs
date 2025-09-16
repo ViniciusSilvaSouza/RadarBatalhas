@@ -5,12 +5,13 @@ using Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Radar.Domain.Compartilhado.Contracts;
-using Radar.Infrastructure.Auth;
 using Radar.Infrastructure.Cache;
 using StackExchange.Redis;
+using Api.Auth;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.IdentityModel.Tokens;
 
-namespace Api.DI;
+namespace Api.Extensions.DI;
 
 public static class DependencyInjection
 {
@@ -63,7 +64,6 @@ public static class DependencyInjection
         {
             services.AddAuthentication("Test")
                 .AddScheme<AuthenticationSchemeOptions, FakeAuthHandler>("Test", _ => { });
-            services.AddSingleton<IServicoAutorizacao, AllowAllAuthZService>();
         }
         else
         {
@@ -75,9 +75,20 @@ public static class DependencyInjection
                     o.Authority = authority;
                     o.Audience = audience;
                     o.RequireHttpsMetadata = false;
+                    o.MapInboundClaims = false; // mantém claims como no JWT (sub, roles)
+                    o.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateAudience = false
+                    };
                 });
-            services.AddScoped<IServicoAutorizacao, RbacAuthorizationService>();
         }
+
+        services.AddAuthorization(options =>
+        {
+            options.AddPolicy("eventos.criar", p => p.Requirements.Add(new PermissionRequirement("eventos.criar")));
+            options.AddPolicy("admin.somente", p => p.Requirements.Add(new PermissionRequirement("noticias.publicar")));
+        });
+        services.AddScoped<IAuthorizationHandler, PermissionHandler>();
 
         // UoW + App dependencies (repositories, use cases)
         services.AddScoped<IUnitOfWork, UnitOfWork>();

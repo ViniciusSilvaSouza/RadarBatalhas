@@ -21,4 +21,10 @@ public class EventoRepository(RadarDbContext db) : IEventoRepositorio
         var q = _db.Eventos.AsNoTracking().Where(x => x.IdStatus == StatusEvento.INSCRICOES_ABERTAS && x.Data >= hoje);
         return Task.FromResult(q.AsEnumerable());
     }
+
+    public Task<IEnumerable<Evento>> ListarPorOrganizadorAsync(Guid organizadorId, CancellationToken ct = default)
+    {
+        var q = _db.Eventos.AsNoTracking().Where(x => x.OrganizadorId == organizadorId).OrderByDescending(x => x.Data);
+        return Task.FromResult(q.AsEnumerable());
+    }
 }

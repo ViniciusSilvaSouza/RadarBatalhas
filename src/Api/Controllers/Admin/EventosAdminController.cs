@@ -4,26 +4,25 @@ using Application.DTOs.Eventos;
 using Application.UseCases.Evento;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Radar.Domain.Compartilhado.Contracts;
+using Application.Contracts;
 
 namespace Api.Controllers.Admin;
 
 [ApiController]
 [Route("api/v1/admin/eventos")]
-[Authorize]
-public class EventosAdminController(CriarEventoUseCase criar, IServicoAutorizacao authz) : ControllerBase
+[Authorize(Policy = "eventos.criar")]
+public class EventosAdminController(CriarEventoUseCase criar, ICurrentUserService currentUser) : ControllerBase
 {
     private readonly CriarEventoUseCase _criar = criar;
-    private readonly IServicoAutorizacao _authz = authz;
+    private readonly ICurrentUserService _currentUser = currentUser;
 
     [HttpPost]
     [ProducesResponseType(typeof(Envelope<EventoDto>), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<ActionResult<Envelope<EventoDto>>> Criar([FromBody] CriarEventoRequest req, CancellationToken ct)
     {
-        await _authz.DemandAsync(User, "eventos.criar");
-        var dto = await _criar.ExecuteAsync(req, ct);
-        // retorna 201 com Location apontando para GET público por id
+        if (!_currentUser.TryGetSubject(User, out var organizadorId)) return Unauthorized();
+        var dto = await _criar.ExecuteAsync(req, organizadorId, ct);
         return CreatedAtAction(
             actionName: nameof(EventosPublicosController.ObterPorId),
             controllerName: "EventosPublicos",
